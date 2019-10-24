@@ -21,23 +21,40 @@ const dbPromise = sqlite.open(connectionConfig.file, { Promise });
 // know it uses promises for each call
 module.exports = {
     getTodo : async (id) => {
-        throw new Error('Not implemented!');
         // await database promise
         const db = await dbPromise;
         // Database query
-        const query = "";
+        const query = 'select * from tasks where id = ?';
         // Call database with query, supply array with arguments for query
         // and return the promise
         return db.get(query, [id]);
     },
     getTodos : async () => {
-        throw new Error('Not implemented!');
+
         // await database promise
         const db = await dbPromise;
         // Database query
-        let query = "";
+        let query = "select * from tasks";
         // Call database with query, no arguments supplied since we don't need any at this point.
         // Maybe we will if we want to sort on something for instance.       
         return db.all(query);
+    },
+    saveTodo: async (username, task) => {
+        const db = await dbPromise;
+        let query = "insert into tasks(username, task) values(?, ?)";
+        return db.get(query, [username, task]);
+    },
+    updateTodo: async (id, done) => {
+        const db = await dbPromise;
+        let query = "update tasks set done=? where id=?";
+        return db.get(query, [done, id]);
+    },
+    deleteTodo: async (id) => {
+        const db = await dbPromise;
+        let query = "delete from tasks where id=?";
+        return db.get(query, [id]);
     }
 };
+
+
+
